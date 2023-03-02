@@ -300,7 +300,9 @@ class _HomePageState extends State<HomePage> {
                     mapMass: FishData.valueFishMass
                         .map((key, value) => MapEntry(key, value)),
                   )),
-        );
+        ).then((value) {
+                setState(() {});
+              });
       },
     );
   }

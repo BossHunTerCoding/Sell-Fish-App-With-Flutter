@@ -79,17 +79,17 @@ class FishData {
     return pathImage;
   }
 
-  static double priceFish(var fish) {
+  static double priceFish(var fish, {double newprice = 0.0}) {
     double price = 0;
     switch (fish) {
       case 'ปลานิล':
         {
-          price = 80;
+          price = newprice == 0.0 ? 80 : newprice;
           break;
         }
       case 'ปลาบึก':
         {
-          price = 100;
+          price = newprice == 0.0 ? 100 : newprice;
           break;
         }
       default:
