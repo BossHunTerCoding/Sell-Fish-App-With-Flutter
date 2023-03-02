@@ -49,9 +49,9 @@ class _MyappState extends State<Myapp> {
 
 class FishData {
   static List<String> nameFish = ['ปลานิล', 'ปลาบึก'];
-  static String? selectFish;
   static Map<String, double> valueFishPrice = {};
   static Map<String, double> valueFishMass = {};
+  static String? selectFish;
 
   static double calFishPriceKG({required double mass, required double bath}) {
     return mass * bath;

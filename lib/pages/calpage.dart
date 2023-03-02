@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CalPage extends StatefulWidget {
-  const CalPage({super.key, required this.kgf1, required this.kgf2});
-  final double kgf1;
-  final double kgf2;
+  const CalPage({super.key, required this.mapPrice, required this.mapMass});
+  final Map<String,double> mapPrice;
+  final Map<String,double> mapMass;
 
   @override
   State<CalPage> createState() => _CalPageState();
@@ -56,10 +56,6 @@ class _CalPageState extends State<CalPage> {
               height: 200,
               width: 200,
             ),
-            fishShow(
-                'ปลานิล ราคาที่ได้ (กก.ละ 80)', widget.kgf1, 80, Colors.blue),
-            fishShow('ปลาบึก ราคาที่ได้ (กก.ละ 100)', widget.kgf2, 100,
-                Colors.lightBlue)
           ],
         ),
       ),
