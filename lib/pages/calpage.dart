@@ -52,7 +52,7 @@ class _CalPageState extends State<CalPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/fish.png',
+              'assets/fish_icon.png',
               height: 200,
               width: 200,
             ),
