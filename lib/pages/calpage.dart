@@ -61,25 +61,24 @@ class _CalPageState extends State<CalPage> {
         mass.removeAt(index);
         price!.removeAt(index);
       }
+      if (FishData.imageFish(name!.length - 1) == 'assets/fish_icon.png') {
+        name.removeAt(name.length - 1);
+        mass.removeAt(name.length - 1);
+        price!.removeAt(name.length - 1);
+      }
     }
     return ListView.builder(
         itemCount: mass.length,
         itemBuilder: (context, index) {
-          return mass.isEmpty == true
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'ไม่มีข้อมูลน้ำหนักปลา',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
-                )
-              : fishShow(
-                  title: name![index], kg: mass[index], bath: price![index]);
+          if (mass[index] == 0.0) {
+            name!.removeAt(index);
+            mass.removeAt(index);
+            price!.removeAt(index);
+          } else {
+            return fishShow(
+                title: name![index], kg: mass, bath: price!, index: index);
+          }
+          return null;
         });
   }
 
@@ -118,9 +117,10 @@ class _CalPageState extends State<CalPage> {
   }
 
   Padding fishShow(
-      {required String title,
-      required double kg,
-      required double bath,
+      {required int index,
+      required String title,
+      required List<dynamic> kg,
+      required List<dynamic> bath,
       Color color = Colors.blue}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -132,11 +132,15 @@ class _CalPageState extends State<CalPage> {
           onPressed: () {
             setState(() {
               FishData.selectFish = title;
+              FishData.inputPrice.text = bath[index].toString();
+              FishData.inputMass.text = kg[index].toString();
+              FishData.valueFishPrice[title[index]] = bath[index].toString();
+              FishData.valueFishMass[title[index]] = kg[index].toString();
               Navigator.pop(context);
             });
           },
           child: SizedBox(
-            width: 300,
+            width: 280,
             height: 400,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -163,23 +167,26 @@ class _CalPageState extends State<CalPage> {
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 25),
+                      fontSize: 22),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'น้ำหนักปลา : $kg กก.\nราคารวม : ${(kg * FishData.priceFish(title, newprice: bath)).toStringAsFixed(2)} บาท',
+                  'น้ำหนักปลา : ${kg[index]} กก.\nราคารวม : ${(kg[index] * FishData.priceFish(title, newprice: bath[index])).toStringAsFixed(2)} บาท',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
               const Align(
                 alignment: Alignment.bottomRight,
-                child: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                  size: 25,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 25,
+                  ),
                 ),
               )
             ]),

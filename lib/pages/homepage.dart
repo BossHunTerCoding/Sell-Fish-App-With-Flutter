@@ -53,14 +53,47 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget setBody() {
+  Widget setBody(BuildContext context) {
     var fishField = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
           listSelectFish(),
-          textFieldPrice(),
-          textFieldMass(),
+          textField(
+            context,
+            getinput: FishData.inputPrice,
+            texttitle:
+                'ราคา ${FishData.selectFish ?? ''} ${FishData.selectFish == null ? '' : '(เดิมราคา ${FishData.priceFish(FishData.selectFish)} บาท )'}',
+            textsubtitle: FishData.selectFish == null
+                ? ''
+                : FishData.valueFishPrice[FishData.selectFish] == '0.0'
+                    ? 'กรุณากรอกราคาที่ต้องการเปลี่ยน'
+                    : 'กรุณากรอกราคาที่ต้องการเปลี่ยน',
+            unit: 'บาท',
+            method: (velue) {
+              setState(() {
+                FishData.valueFishPrice
+                    .addAll({FishData.selectFish: FishData.inputPrice.text});
+              });
+            },
+          ),
+          textField(
+            context,
+            getinput: FishData.inputMass,
+            texttitle: 'น้ำหนัก ${FishData.selectFish ?? ''}',
+            textsubtitle: FishData.valueFishMass[FishData.selectFish] == null
+                ? ''
+                : FishData.valueFishMass[FishData.selectFish] == '0.0'
+                    ? 'กรุณากรอกน้ำหนัก (กิโลกรัม)'
+                    : 'กรุณากรอกน้ำหนัก (กิโลกรัม)',
+            unit: 'กก.',
+            method: (value) {
+              setState(() {
+                FishData.valueFishMass
+                    .addAll({FishData.selectFish: FishData.inputMass.text});
+              });
+            },
+          ),
         ],
       ),
     );
@@ -157,7 +190,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Padding textFieldMass() {
+  Padding textField(
+    BuildContext context, {
+    required getinput,
+    required String texttitle,
+    String? textsubtitle,
+    required String unit,
+    required void Function(String?) method,
+  }) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -165,7 +205,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'น้ำหนัก ${FishData.selectFish ?? ''}',
+              texttitle,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -181,22 +221,11 @@ class _HomePageState extends State<HomePage> {
                     child: TextField(
                       keyboardType: const TextInputType.numberWithOptions(
                           signed: true, decimal: true),
-                      onChanged: (value) {
-                        setState(() {
-                          FishData.valueFishMass.addAll(
-                              {FishData.selectFish: FishData.inputMass.text});
-                        });
-                      },
-                      controller: FishData.inputMass,
+                      onChanged: method,
+                      controller: getinput,
                       decoration: InputDecoration(
                         enabled: FishData.selectFish == null ? false : true,
-                        hintText:
-                            FishData.valueFishMass[FishData.selectFish] == null
-                                ? ''
-                                : FishData.valueFishMass[FishData.selectFish] ==
-                                        '0.0'
-                                    ? 'กรุณากรอกน้ำหนัก (กิโลกรัม)'
-                                    : 'กรุณากรอกน้ำหนัก (กิโลกรัม)',
+                        hintText: textsubtitle,
                         hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       textAlign: TextAlign.center,
@@ -204,73 +233,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'กก.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding textFieldPrice() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'ราคา ${FishData.selectFish ?? ''} ${FishData.selectFish == null ? '' : '(เดิมราคา ${FishData.priceFish(FishData.selectFish)})'}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
               Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: Card(
-                  color: Colors.blue,
-                  child: SizedBox(
-                    width: 280,
-                    child: TextField(
-                      keyboardType: const TextInputType.numberWithOptions(
-                          signed: true, decimal: true),
-                      onChanged: (value) {
-                        setState(() {
-                          FishData.valueFishPrice.addAll(
-                              {FishData.selectFish: FishData.inputPrice.text});
-                        });
-                      },
-                      controller: FishData.inputPrice,
-                      decoration: InputDecoration(
-                        enabled: FishData.selectFish == null ? false : true,
-                        hintText: FishData.selectFish == null
-                            ? ''
-                            : FishData.valueFishPrice[FishData.selectFish] ==
-                                    '0.0'
-                                ? 'กรุณากรอกราคาที่ต้องการเปลี่ยน'
-                                : 'กรุณากรอกราคาที่ต้องการเปลี่ยน',
-                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  'บาท',
-                  style: TextStyle(
+                  unit,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -301,10 +268,18 @@ class _HomePageState extends State<HomePage> {
       onPressed: () {
         try {
           if (FishData.selectFish != null) {
-            Map<String, double> checkm = FishData.valueFishMass
-                .map((key, value) => MapEntry(key!, double.parse(value!)));
-            Map<String, double> checkp = FishData.valueFishPrice
-                .map((key, value) => MapEntry(key!, double.parse(value!)));
+            Map<String, double> checkm = FishData.valueFishMass.map(
+                (key, value) => MapEntry(
+                    key!,
+                    FishData.inputMass.text == ''
+                        ? 0.0
+                        : double.parse(value!)));
+            Map<String, double> checkp = FishData.valueFishPrice.map(
+                (key, value) => MapEntry(
+                    key!,
+                    FishData.inputPrice.text == ''
+                        ? 0.0
+                        : double.parse(value!)));
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -343,7 +318,8 @@ class _HomePageState extends State<HomePage> {
                   content: SizedBox(
                       height: 100,
                       width: 250,
-                      child: Center(child: Text('กรุณากรอกข้อมูลตัวเลขให้ถูกต้อง'))),
+                      child: Center(
+                          child: Text('กรุณากรอกข้อมูลตัวเลขให้ถูกต้อง'))),
                 );
               });
         }
@@ -355,7 +331,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: setAppbar('Sell Fish', false, Icons.fitbit_sharp),
-      body: setBody(),
+      body: setBody(context),
       bottomNavigationBar: setBottomNavBar(),
       floatingActionButton: setFloatingButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

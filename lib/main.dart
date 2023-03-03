@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:sell_fish/pages/homepage.dart';
 
 main() {
-  for (int index = 0; index < FishData.nameFish.length; index++) {
-    FishData.valueFishPrice.addAll({FishData.nameFish[index]: '0.0'});
-    FishData.valueFishMass.addAll({FishData.nameFish[index]: '0.0'});
-    FishData.valuecurrentPrice.addAll({FishData.nameFish[index]: '0.0'});
-    FishData.valuecurrentMass.addAll({FishData.nameFish[index]: '0.0'});
-  }
+  addFishStart(listFish: FishData.nameFish);
   runApp(const Myapp());
+}
+
+void addFishStart({required List listFish, String values = '0.0'}) {
+  for (int index = 0; index < FishData.nameFish.length; index++) {
+    FishData.valueFishPrice.addAll({listFish[index]: values});
+    FishData.valueFishMass.addAll({listFish[index]: values});
+    FishData.valuecurrentPrice.addAll({listFish[index]: values});
+    FishData.valuecurrentMass.addAll({listFish[index]: values});
+  }
 }
 
 class Myapp extends StatefulWidget {
