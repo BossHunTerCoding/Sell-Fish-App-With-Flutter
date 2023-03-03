@@ -54,7 +54,6 @@ class _MyappState extends State<Myapp> {
 }
 
 class FishData {
-  static var groupFish = [];
   static List<String> nameFish = ['ปลานิล', 'ปลาบึก'];
   static Map<String?, String?> valueFishPrice = {};
   static Map<String?, String?> valueFishMass = {};
