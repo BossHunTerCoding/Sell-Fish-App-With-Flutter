@@ -1,4 +1,4 @@
-# Sell Fish Flutter (Not Finish)
+# Sell Fish Flutter
 
 โปรแกรมสำหรับคำนวนราคาปลาตามน้ำหนัก (กิโลกรัม)
 
