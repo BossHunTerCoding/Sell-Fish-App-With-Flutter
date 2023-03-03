@@ -5,15 +5,11 @@ import 'package:sell_fish/pages/calpage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController inputPrice = TextEditingController();
-  TextEditingController inputMass = TextEditingController();
-
   AppBar setAppbar(String title, bool center, [IconData? icon]) {
     return AppBar(
       centerTitle: center,
@@ -138,9 +134,23 @@ class _HomePageState extends State<HomePage> {
                 .toList(),
             onChanged: (newValue) {
               setState(() {
-                inputPrice.clear();
-                inputMass.clear();
+                FishData.valuecurrentPrice.addAll(FishData.valueFishPrice);
+                FishData.valuecurrentMass.addAll(FishData.valueFishMass);
                 FishData.selectFish = newValue;
+                FishData.inputPrice.text =
+                    FishData.valuecurrentPrice[FishData.selectFish].toString();
+                FishData.inputMass.text =
+                    FishData.valuecurrentMass[FishData.selectFish].toString();
+                if (FishData.inputPrice.text == '0.0' ||
+                    FishData.inputPrice.text == '' ||
+                    FishData.inputPrice.text == '0') {
+                  FishData.inputPrice.clear();
+                }
+                if (FishData.inputMass.text == '0.0' ||
+                    FishData.inputMass.text == '' ||
+                    FishData.inputMass.text == '0') {
+                  FishData.inputMass.clear();
+                }
               });
             }),
       ),
@@ -169,27 +179,27 @@ class _HomePageState extends State<HomePage> {
                   child: SizedBox(
                     width: 280,
                     child: TextField(
-                      controller: inputMass,
+                      keyboardType: const TextInputType.numberWithOptions(
+                          signed: true, decimal: true),
+                      onChanged: (value) {
+                        setState(() {
+                          FishData.valueFishMass.addAll(
+                              {FishData.selectFish: FishData.inputMass.text});
+                        });
+                      },
+                      controller: FishData.inputMass,
                       decoration: InputDecoration(
                         enabled: FishData.selectFish == null ? false : true,
-                        hintText: FishData.valueFishMass[FishData.selectFish] ==
-                                null
-                            ? ''
-                            : '${FishData.valueFishMass[FishData.selectFish] == 0.0 ? 'กรุณากรอกน้ำหนัก (กิโลกรัม)' : FishData.valueFishMass[FishData.selectFish]}',
+                        hintText:
+                            FishData.valueFishMass[FishData.selectFish] == null
+                                ? ''
+                                : FishData.valueFishMass[FishData.selectFish] ==
+                                        '0.0'
+                                    ? 'กรุณากรอกน้ำหนัก (กิโลกรัม)'
+                                    : 'กรุณากรอกน้ำหนัก (กิโลกรัม)',
                         hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       textAlign: TextAlign.center,
-                      onChanged: (value) {
-                        setState(() {
-                          try {
-                            FishData.valueFishMass[FishData.selectFish!] =
-                                double.parse(inputMass.text);
-                            // ignore: empty_catches
-                          } catch (e) {
-                            FishData.valueFishMass[FishData.selectFish!] = 0.0;
-                          }
-                        });
-                      },
                     ),
                   ),
                 ),
@@ -232,28 +242,26 @@ class _HomePageState extends State<HomePage> {
                   child: SizedBox(
                     width: 280,
                     child: TextField(
-                      controller: inputPrice,
+                      keyboardType: const TextInputType.numberWithOptions(
+                          signed: true, decimal: true),
+                      onChanged: (value) {
+                        setState(() {
+                          FishData.valueFishPrice.addAll(
+                              {FishData.selectFish: FishData.inputPrice.text});
+                        });
+                      },
+                      controller: FishData.inputPrice,
                       decoration: InputDecoration(
                         enabled: FishData.selectFish == null ? false : true,
-                        hintText: FishData
-                                    .valueFishPrice[FishData.selectFish] ==
-                                null
+                        hintText: FishData.selectFish == null
                             ? ''
-                            : '${FishData.valueFishPrice[FishData.selectFish] == 0.0 ? 'กรุณากรอกราคาที่ต้องการเปลี่ยน' : FishData.valueFishPrice[FishData.selectFish]}',
+                            : FishData.valueFishPrice[FishData.selectFish] ==
+                                    '0.0'
+                                ? 'กรุณากรอกราคาที่ต้องการเปลี่ยน'
+                                : 'กรุณากรอกราคาที่ต้องการเปลี่ยน',
                         hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       textAlign: TextAlign.center,
-                      onChanged: (value) {
-                        setState(() {
-                          try {
-                            FishData.valueFishPrice[FishData.selectFish!] =
-                                double.parse(inputPrice.text);
-                            // ignore: empty_catches
-                          } catch (e) {
-                            FishData.valueFishPrice[FishData.selectFish!] = 0.0;
-                          }
-                        });
-                      },
                     ),
                   ),
                 ),
@@ -291,18 +299,54 @@ class _HomePageState extends State<HomePage> {
         color: Colors.blue,
       ),
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CalPage(
-                    mapPrice: FishData.valueFishPrice
-                        .map((key, value) => MapEntry(key, value)),
-                    mapMass: FishData.valueFishMass
-                        .map((key, value) => MapEntry(key, value)),
-                  )),
-        ).then((value) {
-                setState(() {});
+        try {
+          if (FishData.selectFish != null) {
+            Map<String, double> checkm = FishData.valueFishMass
+                .map((key, value) => MapEntry(key!, double.parse(value!)));
+            Map<String, double> checkp = FishData.valueFishPrice
+                .map((key, value) => MapEntry(key!, double.parse(value!)));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CalPage(
+                        mapPrice: checkp,
+                        mapMass: checkm,
+                      )),
+            ).then((value) {
+              setState(() {});
+            });
+          } else {
+            showDialog(
+                context: context,
+                builder: (builderUI) {
+                  return const AlertDialog(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    elevation: 1,
+                    content: SizedBox(
+                        height: 100,
+                        width: 250,
+                        child: Center(child: Text('กรุณาเลือกชนิดปลา'))),
+                  );
+                });
+          }
+        } catch (e) {
+          showDialog(
+              context: context,
+              builder: (builderUI) {
+                return const AlertDialog(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  elevation: 1,
+                  content: SizedBox(
+                      height: 100,
+                      width: 250,
+                      child: Center(child: Text('กรุณากรอกข้อมูลตัวเลขให้ถูกต้อง'))),
+                );
               });
+        }
       },
     );
   }

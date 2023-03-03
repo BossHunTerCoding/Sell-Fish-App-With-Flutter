@@ -54,26 +54,32 @@ class _CalPageState extends State<CalPage> {
   }
 
   Widget setBody(
-      {required List name, required List mass, required List price}) {
-    for (int index = 0; index < mass.length; index++) {
+      {required List? name, required List? mass, required List? price}) {
+    for (int index = 0; index < mass!.length; index++) {
       if (mass[index] == 0.0) {
-        name.removeAt(index);
+        name!.removeAt(index);
         mass.removeAt(index);
-        price.removeAt(index);
+        price!.removeAt(index);
       }
     }
     return ListView.builder(
         itemCount: mass.length,
         itemBuilder: (context, index) {
-          print(mass);
-          return mass.isEmpty == true ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('ไม่มีข้อมูลน้ำหนักปลา',
-              style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),)
-            ],
-          ) : fishShow(
-              title: name[index], kg: mass[index], bath: price[index]);
+          return mass.isEmpty == true
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      'ไม่มีข้อมูลน้ำหนักปลา',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                )
+              : fishShow(
+                  title: name![index], kg: mass[index], bath: price![index]);
         });
   }
 
@@ -170,7 +176,11 @@ class _CalPageState extends State<CalPage> {
               ),
               const Align(
                 alignment: Alignment.bottomRight,
-                child: Icon(Icons.edit, color:Colors.white,size: 25,),
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                  size: 25,
+                ),
               )
             ]),
           ),

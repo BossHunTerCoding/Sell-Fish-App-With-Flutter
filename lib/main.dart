@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sell_fish/pages/homepage.dart';
 
 main() {
-  for (int index = 0; index < FishData.nameFish.length ; index++) {
-    FishData.valueFishPrice.addAll({FishData.nameFish[index]:0.0});
-    FishData.valueFishMass.addAll({FishData.nameFish[index]:0.0});
+  for (int index = 0; index < FishData.nameFish.length; index++) {
+    FishData.valueFishPrice.addAll({FishData.nameFish[index]: '0.0'});
+    FishData.valueFishMass.addAll({FishData.nameFish[index]: '0.0'});
+    FishData.valuecurrentPrice.addAll({FishData.nameFish[index]: '0.0'});
+    FishData.valuecurrentMass.addAll({FishData.nameFish[index]: '0.0'});
   }
   runApp(const Myapp());
 }
@@ -48,10 +50,15 @@ class _MyappState extends State<Myapp> {
 }
 
 class FishData {
+  static var groupFish = [];
   static List<String> nameFish = ['ปลานิล', 'ปลาบึก'];
-  static Map<String, double> valueFishPrice = {};
-  static Map<String, double> valueFishMass = {};
+  static Map<String?, String?> valueFishPrice = {};
+  static Map<String?, String?> valueFishMass = {};
+  static Map<String?, String?> valuecurrentPrice = {};
+  static Map<String?, String?> valuecurrentMass = {};
   static String? selectFish;
+  static TextEditingController inputPrice = TextEditingController();
+  static TextEditingController inputMass = TextEditingController();
 
   static double calFishPriceKG({required double mass, required double bath}) {
     return mass * bath;
